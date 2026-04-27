@@ -5,6 +5,7 @@
 ![CI GitHubAction](https://github.com/peterarsentev/job4j_threads/actions/workflows/maven.yml/badge.svg)
 
 Этот проект предназначен для изучения основ многопоточности в Java.
+В проекте производится работа с ветками git.
 
 В проекте рассмотрено следующее:
 1. Threads
