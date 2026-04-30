@@ -24,18 +24,19 @@ public class Wget implements Runnable {
                  var output = Files.newOutputStream(path)) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
+                long currentTimeMillis = System.currentTimeMillis();
+                int totalBytesRead = 0;
                 while (true) {
-                    long startAt = System.nanoTime();
                     bytesRead = input.read(buffer);
-                    long downloadTime = System.nanoTime() - startAt;
-                    if (bytesRead == -1) {
-                        break;
-                    }
                     output.write(buffer, 0, bytesRead);
-                    long expectedTime = bytesRead * 1_000_000L / speed;
-                    long sleepTime = expectedTime - downloadTime;
-                    if (sleepTime > 0) {
-                        Thread.sleep(sleepTime / 1_000_000L, (int) (sleepTime % 1_000_000L));
+                    totalBytesRead += bytesRead;
+                    if (totalBytesRead >= speed) {
+                        long elapsedTime = System.currentTimeMillis() - currentTimeMillis;
+                        if (elapsedTime < 1000) {
+                            Thread.sleep(1000 - elapsedTime);
+                        }
+                        currentTimeMillis = System.currentTimeMillis();
+                        totalBytesRead = 0;
                     }
                 }
             }
