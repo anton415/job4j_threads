@@ -16,8 +16,16 @@ class SimpleBlockingQueueTest {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
         List<Integer> buffer = new ArrayList<>();
         Thread producer = new Thread(() -> {
-            queue.offer(1);
-            queue.offer(2);
+            try {
+                queue.offer(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                queue.offer(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
         Thread consumer = new Thread(() -> {
             try {
@@ -40,7 +48,14 @@ class SimpleBlockingQueueTest {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
 
         Thread producer = new Thread(() ->
-                IntStream.range(0, 5).forEach(queue::offer)
+                IntStream.range(0, 5).forEach(value -> {
+                    try {
+                        queue.offer(value);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        e.printStackTrace();
+                    }
+                })
         );
 
         Thread consumer = new Thread(() -> {
