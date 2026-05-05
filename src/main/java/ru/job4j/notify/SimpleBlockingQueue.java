@@ -8,11 +8,29 @@ import net.jcip.annotations.ThreadSafe;
 
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
+    private final int size;
+
+    public SimpleBlockingQueue() {
+        this(Integer.MAX_VALUE);
+    }
+
+    public SimpleBlockingQueue(int size) {
+        this.size = size;
+    }
+
     @GuardedBy("this")
     private final Queue<T> queue = new LinkedList<>();
 
     public void offer(T value) {
         synchronized (this) {
+            while (queue.size() >= size) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
             queue.offer(value);
             this.notifyAll();
         }
@@ -23,8 +41,9 @@ public class SimpleBlockingQueue<T> {
             while (queue.isEmpty()) {
                 this.wait();
             }
+            T rsl = queue.poll();
             this.notifyAll();
-            return queue.poll();
+            return rsl;
         }
     }
 
