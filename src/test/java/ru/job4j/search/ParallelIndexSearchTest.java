@@ -11,14 +11,14 @@ class ParallelIndexSearchTest {
     @Test
     void whenSearchIntegerInSmallArrayThenIndex() {
         Integer[] array = {1, 2, 3, 4, 5};
-        int result = new ParallelIndexSearch<>(array, 4).compute();
+        int result = ParallelIndexSearch.search(array, 4);
         assertThat(result).isEqualTo(3);
     }
 
     @Test
     void whenSearchStringInSmallArrayThenIndex() {
         String[] array = {"one", "two", "three", "four"};
-        int result = new ParallelIndexSearch<>(array, "two").compute();
+        int result = ParallelIndexSearch.search(array, "two");
         assertThat(result).isEqualTo(1);
     }
 
@@ -27,7 +27,7 @@ class ParallelIndexSearchTest {
         Integer[] array = IntStream.range(0, 100)
                 .boxed()
                 .toArray(Integer[]::new);
-        int result = new ParallelIndexSearch<>(array, 73).compute();
+        int result = ParallelIndexSearch.search(array, 73);
         assertThat(result).isEqualTo(73);
     }
 
@@ -36,7 +36,7 @@ class ParallelIndexSearchTest {
         String[] array = IntStream.range(0, 20)
                 .mapToObj(String::valueOf)
                 .toArray(String[]::new);
-        int result = new ParallelIndexSearch<>(array, "not found").compute();
+        int result = ParallelIndexSearch.search(array, "not found");
         assertThat(result).isEqualTo(-1);
     }
 }

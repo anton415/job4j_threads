@@ -1,6 +1,7 @@
 package ru.job4j.search;
 
 import java.util.Objects;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
 public class ParallelIndexSearch<T> extends RecursiveTask<Integer> {
@@ -13,6 +14,10 @@ public class ParallelIndexSearch<T> extends RecursiveTask<Integer> {
         this(array, target, 0, array.length);
     }
 
+    public static <T> int search(T[] array, T target) {
+        return ForkJoinPool.commonPool().invoke(new ParallelIndexSearch<>(array, target));
+    }
+
     private ParallelIndexSearch(T[] array, T target, int from, int to) {
         this.array = array;
         this.target = target;
@@ -23,12 +28,7 @@ public class ParallelIndexSearch<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (to - from <= 10) {
-            for (int index = from; index < to; index++) {
-                if (Objects.equals(array[index], target)) {
-                    return index;
-                }
-            }
-            return -1;
+            return linearSearch();
         }
         int middle = (from + to) / 2;
         ParallelIndexSearch<T> left = new ParallelIndexSearch<>(array, target, from, middle);
@@ -38,5 +38,14 @@ public class ParallelIndexSearch<T> extends RecursiveTask<Integer> {
         Integer leftResult = left.join();
         Integer rightResult = right.join();
         return leftResult != -1 ? leftResult : rightResult;
+    }
+
+    private int linearSearch() {
+        for (int index = from; index < to; index++) {
+            if (Objects.equals(array[index], target)) {
+                return index;
+            }
+        }
+        return -1;
     }
 }
