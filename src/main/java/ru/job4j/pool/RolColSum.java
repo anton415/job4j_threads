@@ -3,27 +3,6 @@ package ru.job4j.pool;
 import java.util.concurrent.CompletableFuture;
 
 public class RolColSum {
-    public static class Sums {
-        private int rowSum;
-        private int colSum;
-
-        public int getRowSum() {
-            return rowSum;
-        }
-
-        public void setRowSum(int rowSum) {
-            this.rowSum = rowSum;
-        }
-
-        public int getColSum() {
-            return colSum;
-        }
-
-        public void setColSum(int colSum) {
-            this.colSum = colSum;
-        }
-    }
-
     public static Sums[] sum(int[][] matrix) {
         int size = matrix.length;
         Sums[] result = new Sums[size];
@@ -47,15 +26,12 @@ public class RolColSum {
     }
 
     private static Sums calc(int[][] matrix, int index) {
-        Sums result = new Sums();
         int rowSum = 0;
         int colSum = 0;
         for (int i = 0; i < matrix.length; i++) {
             rowSum += matrix[index][i];
             colSum += matrix[i][index];
         }
-        result.setRowSum(rowSum);
-        result.setColSum(colSum);
-        return result;
+        return new Sums(rowSum, colSum);
     }
 }

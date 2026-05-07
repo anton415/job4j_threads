@@ -3,7 +3,6 @@ package ru.job4j.pool;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 class RolColSumTest {
 
@@ -14,13 +13,13 @@ class RolColSumTest {
                 {4, 5, 6},
                 {7, 8, 9}
         };
-        RolColSum.Sums[] result = RolColSum.sum(matrix);
-        assertThat(result).extracting(RolColSum.Sums::getRowSum, RolColSum.Sums::getColSum)
-                .containsExactly(
-                        tuple(6, 12),
-                        tuple(15, 15),
-                        tuple(24, 18)
-                );
+        Sums[] result = RolColSum.sum(matrix);
+        Sums[] expected = {
+                new Sums(6, 12),
+                new Sums(15, 15),
+                new Sums(24, 18)
+        };
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
@@ -30,12 +29,12 @@ class RolColSumTest {
                 {4, 5, 6},
                 {7, 8, 9}
         };
-        RolColSum.Sums[] result = RolColSum.asyncSum(matrix);
-        assertThat(result).extracting(RolColSum.Sums::getRowSum, RolColSum.Sums::getColSum)
-                .containsExactly(
-                        tuple(6, 12),
-                        tuple(15, 15),
-                        tuple(24, 18)
-                );
+        Sums[] result = RolColSum.asyncSum(matrix);
+        Sums[] expected = {
+                new Sums(6, 12),
+                new Sums(15, 15),
+                new Sums(24, 18)
+        };
+        assertThat(result).isEqualTo(expected);
     }
 }
