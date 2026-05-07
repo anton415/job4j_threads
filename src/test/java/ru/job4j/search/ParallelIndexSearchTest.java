@@ -32,6 +32,15 @@ class ParallelIndexSearchTest {
     }
 
     @Test
+    void whenSearchLastElementInBigArrayThenIndex() {
+        Integer[] array = IntStream.range(0, 100)
+                .boxed()
+                .toArray(Integer[]::new);
+        int result = ParallelIndexSearch.search(array, 99);
+        assertThat(result).isEqualTo(99);
+    }
+
+    @Test
     void whenElementNotFoundThenMinusOne() {
         String[] array = IntStream.range(0, 20)
                 .mapToObj(String::valueOf)
